@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -33,14 +33,14 @@ func main() {
 		filterValue = os.Args[1]
 	}
 	if len(os.Args) > 2 {
-		b, err := ioutil.ReadFile(os.Args[2])
+		b, err := os.ReadFile(os.Args[2])
 		if err != nil {
 			log.Fatal("failed to read " + os.Args[2] + " : " + err.Error())
 		}
 		inputValue = string(b)
 	} else {
 		if m, _ := os.Stdin.Stat(); m.Mode()&os.ModeCharDevice != os.ModeCharDevice {
-			b, err := ioutil.ReadAll(os.Stdin)
+			b, err := io.ReadAll(os.Stdin)
 			if err == nil {
 				inputValue = string(b)
 			}
@@ -54,7 +54,7 @@ func main() {
 	dir, _ := homedir.Dir()
 	loadfileDialog = widgets.NewQFileDialog2(nil, "Select a JSON file", dir, "")
 	loadfileDialog.ConnectFileSelected(func(filepath string) {
-		b, err := ioutil.ReadFile(filepath)
+		b, err := os.ReadFile(filepath)
 		if err != nil {
 			log.Print("failed to read " + filepath + " : " + err.Error())
 		} else {
