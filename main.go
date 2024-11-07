@@ -62,7 +62,7 @@ func main() {
 	})
 
 	loadfileButton := qt.NewQPushButton3("Load")
-	loadfileButton.SetMaximumWidth(40)
+	loadfileButton.SetMaximumWidth(50)
 	loadfileButton.OnClicked1(func(_ bool) {
 		loadfileDialog.Open()
 	})
