@@ -1,27 +1,10 @@
 module github.com/rcalixte/jqview
 
-go 1.22.3
+go 1.23.2
 
 require (
-	github.com/itchyny/gojq v0.12.15
-	github.com/mitchellh/go-homedir v1.1.0
-	github.com/therecipe/qt v0.0.0-20200904063919-c0c124a5770d
+	github.com/itchyny/gojq v0.12.16
+	github.com/mappu/miqt v0.6.0
 )
 
-require (
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/gopherjs/gopherjs v1.17.2 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/itchyny/timefmt-go v0.1.5 // indirect
-	github.com/neelance/astrewrite v0.0.0-20160511093645-99348263ae86 // indirect
-	github.com/neelance/sourcemap v0.0.0-20200213170602-2833bce08e4c // indirect
-	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/spf13/cobra v1.2.1 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1 // indirect
-	golang.org/x/tools v0.1.5 // indirect
-)
+require github.com/itchyny/timefmt-go v0.1.6 // indirect

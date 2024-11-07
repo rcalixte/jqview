@@ -10,8 +10,7 @@ import (
 	"time"
 
 	"github.com/itchyny/gojq"
-	"github.com/mitchellh/go-homedir"
-	"github.com/therecipe/qt/widgets"
+	qt "github.com/mappu/miqt/qt6"
 )
 
 var filterValue = "."
@@ -21,13 +20,13 @@ var inputValue = `[{
   "fruit": "banana"
 }]`
 
-var loadfileDialog *widgets.QFileDialog
-var input *widgets.QPlainTextEdit
-var filter *widgets.QLineEdit
-var output *widgets.QPlainTextEdit
+var loadfileDialog *qt.QFileDialog
+var input *qt.QPlainTextEdit
+var filter *qt.QLineEdit
+var output *qt.QPlainTextEdit
 
 func main() {
-	app := widgets.NewQApplication(len(os.Args), os.Args)
+	qt.NewQApplication(os.Args)
 
 	if len(os.Args) > 1 {
 		filterValue = os.Args[1]
@@ -47,63 +46,62 @@ func main() {
 		}
 	}
 
-	window := widgets.NewQMainWindow(nil, 0)
+	window := qt.NewQMainWindow2()
 	window.SetMinimumSize2(400, 500)
 	window.SetWindowTitle("jqview")
 
-	dir, _ := homedir.Dir()
-	loadfileDialog = widgets.NewQFileDialog2(nil, "Select a JSON file", dir, "")
-	loadfileDialog.ConnectFileSelected(func(filepath string) {
+	loadfileDialog = qt.NewQFileDialog4(window.QWidget, "Select a JSON file")
+	loadfileDialog.OnFileSelected(func(filepath string) {
 		b, err := os.ReadFile(filepath)
 		if err != nil {
 			log.Print("failed to read " + filepath + " : " + err.Error())
 		} else {
 			input.SetPlainText(string(b))
-			go refresh()
+			refresh()
 		}
 	})
 
-	loadfileButton := widgets.NewQPushButton2("Load", nil)
+	loadfileButton := qt.NewQPushButton3("Load")
 	loadfileButton.SetMaximumWidth(40)
-	loadfileButton.ConnectClicked(func(_ bool) {
-		loadfileDialog.Open(nil, "")
+	loadfileButton.OnClicked1(func(_ bool) {
+		loadfileDialog.Open()
 	})
 
-	input = widgets.NewQPlainTextEdit(nil)
+	input = qt.NewQPlainTextEdit2()
 	input.SetPlaceholderText("JSON input")
 	input.SetPlainText(inputValue)
-	input.ConnectTextChanged(refresh)
+	input.OnTextChanged(refresh)
 
-	inputSection := widgets.NewQWidget(nil, 0)
-	inputSection.SetLayout(widgets.NewQHBoxLayout())
+	inputSection := qt.NewQWidget2()
+	inputSection.SetLayout(qt.NewQHBoxLayout2().QLayout)
 	inputSection.SetMaximumHeight(150)
-	inputSection.Layout().AddWidget(loadfileButton)
-	inputSection.Layout().AddWidget(input)
+	inputSection.Layout().AddWidget(loadfileButton.QWidget)
+	inputSection.Layout().AddWidget(input.QWidget)
 
-	filter = widgets.NewQLineEdit(nil)
+	filter = qt.NewQLineEdit(window.QWidget)
 	filter.SetPlaceholderText("jq filter")
 	filter.SetText(filterValue)
-	filter.ConnectTextChanged(func(value string) {
+	filter.OnTextChanged(func(value string) {
 		filterValue = value
-		go refresh()
+		refresh()
 	})
 
-	output = widgets.NewQPlainTextEdit(nil)
-	output.SetSizeAdjustPolicy(widgets.QAbstractScrollArea__AdjustToContents)
+	output = qt.NewQPlainTextEdit2()
+	output.SetSizeAdjustPolicy(qt.QAbstractScrollArea__AdjustToContents)
 	output.SetMinimumHeight(300)
 
-	widget := widgets.NewQWidget(nil, 0)
-	widget.SetLayout(widgets.NewQVBoxLayout())
+	widget := qt.NewQWidget2()
+	widget.SetLayout(qt.NewQVBoxLayout2().QLayout)
 	widget.Layout().AddWidget(inputSection)
-	widget.Layout().AddWidget(filter)
-	widget.Layout().AddWidget(output)
+	widget.Layout().AddWidget(filter.QWidget)
+	widget.Layout().AddWidget(output.QWidget)
 
 	window.Show()
 	window.SetCentralWidget(widget)
 
-	go refresh()
+	refresh()
 
-	app.Exec()
+	qt.QApplication_Exec()
 }
 
 func refresh() {
