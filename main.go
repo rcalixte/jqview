@@ -61,18 +61,18 @@ func main() {
 		}
 	})
 
-	loadfileButton := qt.NewQPushButton3("Load")
+	loadfileButton := qt.NewQPushButton5("Load", window.QWidget)
 	loadfileButton.SetMaximumWidth(50)
 	loadfileButton.OnClicked1(func(_ bool) {
 		loadfileDialog.Open()
 	})
 
-	input = qt.NewQPlainTextEdit2()
+	input = qt.NewQPlainTextEdit(window.QWidget)
 	input.SetPlaceholderText("JSON input")
 	input.SetPlainText(inputValue)
 	input.OnTextChanged(refresh)
 
-	inputSection := qt.NewQWidget2()
+	inputSection := qt.NewQWidget(window.QWidget)
 	inputSection.SetLayout(qt.NewQHBoxLayout2().QLayout)
 	inputSection.SetMaximumHeight(150)
 	inputSection.Layout().AddWidget(loadfileButton.QWidget)
@@ -86,11 +86,11 @@ func main() {
 		refresh()
 	})
 
-	output = qt.NewQPlainTextEdit2()
+	output = qt.NewQPlainTextEdit(window.QWidget)
 	output.SetSizeAdjustPolicy(qt.QAbstractScrollArea__AdjustToContents)
 	output.SetMinimumHeight(300)
 
-	widget := qt.NewQWidget2()
+	widget := qt.NewQWidget(window.QWidget)
 	widget.SetLayout(qt.NewQVBoxLayout2().QLayout)
 	widget.Layout().AddWidget(inputSection)
 	widget.Layout().AddWidget(filter.QWidget)
