@@ -2,5 +2,5 @@ github.com/itchyny/gojq v0.12.16 h1:yLfgLxhIr/6sJNVmYfQjTIv0jGctu6/DgDoivmxTr7g=
 github.com/itchyny/gojq v0.12.16/go.mod h1:6abHbdC2uB9ogMS38XsErnfqJ94UlngIJGlRAIj4jTM=
 github.com/itchyny/timefmt-go v0.1.6 h1:ia3s54iciXDdzWzwaVKXZPbiXzxxnv1SPGFfM/myJ5Q=
 github.com/itchyny/timefmt-go v0.1.6/go.mod h1:RRDZYC5s9ErkjQvTvvU7keJjxUYzIISJGxm9/mAERQg=
-github.com/mappu/miqt v0.7.0 h1:I1LHubeVe+k7QGb1v2Iu4CpHgwUleBIh47apq5pqgnY=
-github.com/mappu/miqt v0.7.0/go.mod h1:xFg7ADaO1QSkmXPsPODoKe/bydJpRG9fgCYyIDl/h1U=
+github.com/mappu/miqt v0.7.1 h1:CIegOqnF9sxSHs4eyqOgAHbuhFwCu1hth4b989ZTP1k=
+github.com/mappu/miqt v0.7.1/go.mod h1:xFg7ADaO1QSkmXPsPODoKe/bydJpRG9fgCYyIDl/h1U=
