@@ -12,6 +12,11 @@ Made with [Qt](https://qt.io/) and [gojq](https://github.com/itchyny/gojq).
 
 ![](screenshot1.png)
 
+* Same as above but with colors
+```
+~> echo '[{"name": "Mises"}, {"name": "Hayek"}, {"name": "Menger"}]' | jqview -colors
+```
+![](screenshot4.png)
 ```
 ~> echo '[{"name": "Mises"}, {"name": "Hayek"}, {"name": "Menger"}]' | jqview '.[].name'
 ```

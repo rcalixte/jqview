@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"io"
 	"log"
 	"os"
@@ -20,21 +21,28 @@ var inputValue = `[{
   "fruit": "banana"
 }]`
 
-var loadfileDialog *qt.QFileDialog
-var input *qt.QPlainTextEdit
-var filter *qt.QLineEdit
-var output *qt.QPlainTextEdit
+var (
+	loadfileDialog *qt.QFileDialog
+	input          *qt.QPlainTextEdit
+	filter         *qt.QLineEdit
+	output         *qt.QTextEdit
+	colorize       bool
+)
 
 func main() {
-	qt.NewQApplication(os.Args)
 
-	if len(os.Args) > 1 {
-		filterValue = os.Args[1]
+	flag.BoolVar(&colorize, "colors", false, "Colorize the JSON")
+	flag.Parse()
+
+	app := qt.NewQApplication(flag.Args())
+
+	if len(flag.Args()) > 0 {
+		filterValue = flag.Args()[0]
 	}
-	if len(os.Args) > 2 {
-		b, err := os.ReadFile(os.Args[2])
+	if len(flag.Args()) > 1 {
+		b, err := os.ReadFile(flag.Args()[1])
 		if err != nil {
-			log.Fatal("failed to read " + os.Args[2] + " : " + err.Error())
+			log.Fatal("failed to read " + flag.Args()[1] + " : " + err.Error())
 		}
 		inputValue = string(b)
 	} else {
@@ -57,7 +65,6 @@ func main() {
 			log.Print("failed to read " + filepath + " : " + err.Error())
 		} else {
 			input.SetPlainText(string(b))
-			refresh()
 		}
 	})
 
@@ -85,15 +92,33 @@ func main() {
 		filterValue = value
 		refresh()
 	})
+	filterLabel := qt.NewQLabel3("Filter:")
+	filterLabel.SetMinimumWidth(50)
+	filterLabel.SetMaximumWidth(50) // Same as the button
+	filterLabel.SetAlignment(qt.AlignRight)
+	filterLayout := qt.NewQHBoxLayout2()
 
-	output = qt.NewQPlainTextEdit(window.QWidget)
+	output = qt.NewQTextEdit(window.QWidget)
 	output.SetSizeAdjustPolicy(qt.QAbstractScrollArea__AdjustToContents)
 	output.SetMinimumHeight(300)
 
+	if colorize {
+		/* Static background color for the output widget
+		in case the OS theme is dark
+		*/
+		app.SetStyleSheet("QTextEdit {background-color: rgb(255, 255, 255) }")
+	}
+
 	widget := qt.NewQWidget(window.QWidget)
+
+	filterWidget := qt.NewQWidget(widget)
+	filterWidget.SetLayout(filterLayout.Layout())
+	filterWidget.Layout().AddWidget(filterLabel.QWidget)
+	filterWidget.Layout().AddWidget(filter.QWidget)
+
 	widget.SetLayout(qt.NewQVBoxLayout2().QLayout)
 	widget.Layout().AddWidget(inputSection)
-	widget.Layout().AddWidget(filter.QWidget)
+	widget.Layout().AddWidget(filterWidget)
 	widget.Layout().AddWidget(output.QWidget)
 
 	window.Show()
@@ -106,7 +131,11 @@ func main() {
 
 func refresh() {
 	inputValue = input.ToPlainText()
-	output.SetPlainText(runJQ(context.Background(), inputValue, filterValue))
+	if colorize {
+		output.SetHtml(runJQ(context.Background(), inputValue, filterValue))
+	} else {
+		output.SetText(runJQ(context.Background(), inputValue, filterValue))
+	}
 }
 
 func runJQ(
@@ -131,6 +160,12 @@ func runJQ(
 	iter := query.RunWithContext(ctx, object)
 
 	var results []string
+	var anyResults []any
+
+	if colorize {
+		anyResults = make([]any, 0)
+	}
+
 	for {
 		v, exists := iter.Next()
 		if !exists {
@@ -140,10 +175,22 @@ func runJQ(
 		if err, ok := v.(error); ok {
 			return err.Error()
 		}
+		var s []byte
 
-		s, _ := json.MarshalIndent(v, "", "  ")
-		results = append(results, string(s))
+		if colorize {
+			anyResults = append(anyResults, v)
+		} else {
+			s, _ = json.MarshalIndent(v, "", "  ")
+			results = append(results, string(s))
+		}
+
 	}
 
-	return strings.Join(results, "\n")
+	if colorize {
+		html := string(jvMarsh.Marshal(anyResults[0]))
+		return html
+	} else {
+		txt := strings.Join(results, "\n")
+		return txt
+	}
 }
