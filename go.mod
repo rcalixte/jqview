@@ -1,10 +1,10 @@
 module github.com/rcalixte/jqview
 
-go 1.23.2
+go 1.24.0
 
 require (
-	github.com/itchyny/gojq v0.12.17
-	github.com/mappu/miqt v0.13.0
+	github.com/itchyny/gojq v0.12.19
+	github.com/mappu/miqt v0.14.0
 )
 
-require github.com/itchyny/timefmt-go v0.1.6 // indirect
+require github.com/itchyny/timefmt-go v0.1.8 // indirect
